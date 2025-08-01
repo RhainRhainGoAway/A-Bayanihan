@@ -14,25 +14,25 @@ Users earn points from these activities, which they can redeem at partnered loca
 
 # 🔧 Features
 Module	Description
-👤 User Management	Supports Super Admin (City Hall MIS), Admins (Barangay), Residents, and Academic Scholars
-🛡️ Bantay Barangay	Report local concerns (e.g. disasters, safety, facilities)
-📢 Bayanihan Connect	Upload & verify local news for rewards
-📣 Public Advisory	View official announcements from barangay and city officials
-🛍️ Business Partnership	Browse partner stores and redemption history
-🎁 Rewards System	Redeem earned points for goods and school supplies
-🖥️ eSerbisyo	Access government services easily
-🎓 Scholar Hub	Special rewards section for academic scholars
-📺 Video Ads	Supports app sustainability via sponsored content
-🧑‍💼 Profile Management	Update user details and access roles
+- 👤 User Management	Supports Super Admin (City Hall MIS), Admins (Barangay), Residents, and Academic Scholars
+- 🛡️ Bantay Barangay	Report local concerns (e.g. disasters, safety, facilities)
+- 📢 Bayanihan Connect	Upload & verify local news for rewards
+- 📣 Public Advisory	View official announcements from barangay and city officials
+- 🛍️ Business Partnership	Browse partner stores and redemption history
+- 🎁 Rewards System	Redeem earned points for goods and school supplies
+- 🖥️ eSerbisyo	Access government services easily
+- 🎓 Scholar Hub	Special rewards section for academic scholars
+- 📺 Video Ads	Supports app sustainability via sponsored content
+- 🧑‍💼 Profile Management	Update user details and access roles
 
 # 🎯 Target Users
-City Management Information System (MIS)
+- City Management Information System (MIS)
 
-City Officials and Barangay Admins
+- City Officials and Barangay Admins
 
-Santa Rosa Residents
+- Santa Rosa Residents
 
-Youth Academic Scholars
+- Youth Academic Scholars
 
 # 🌍 SDG Alignment
 This project supports the following UN Sustainable Development Goals:
