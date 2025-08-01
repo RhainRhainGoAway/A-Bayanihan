@@ -4,13 +4,10 @@ A+ Bayanihan is a civic engagement web application that empowers residents and a
 # 📌 Project Overview
 Rooted in the Filipino spirit of bayanihan, this project aims to strengthen civic involvement by allowing users to:
 
-Attend barangay meetings
-
-Report local issues like flooding, crimes, or damaged facilities
-
-Engage with verified community news
-
-Users earn points from these activities, which they can redeem at partnered local businesses or City Hall outlets for food, school supplies, and other basic needs—making responsible citizenship morally fulfilling and materially rewarding.
+- Attend barangay meetings
+- Report local issues like flooding, crimes, or damaged facilities
+- Engage with verified community news
+- Users earn points from these activities, which they can redeem at partnered local businesses or City Hall outlets for food, school supplies, and other basic needs—making responsible citizenship morally fulfilling and materially rewarding.
 
 # 🔧 Features
 Module	Description
