@@ -49,20 +49,17 @@ Frontend Design: Figma Prototype
 
 Compatibility:
 
-Web browsers (Chrome, Edge)
+- Web browsers (Chrome, Edge)
 
-OS: Windows 10/11, Android 9+, iOS 13+
+- OS: Windows 10/11, Android 9+, iOS 13+
 
-RAM: Min. 4GB (mobile), 8GB (desktop)
+- RAM: Min. 4GB (mobile), 8GB (desktop)
 
 # 🚧 Limitations
-Exclusively for Santa Rosa, Laguna residents
-
-Partner merchants are approved by City Officials
-
-Accuracy of incident reports relies on official validation
-
-Requires stable internet connection
+- Exclusively for Santa Rosa, Laguna residents
+- Partner merchants are approved by City Officials
+- Accuracy of incident reports relies on official validation
+- Requires stable internet connection
 
 # 👥 Project Team – Team Tabayoyong
 - Arvin Yuri Beato
