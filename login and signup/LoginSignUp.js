@@ -1,4 +1,20 @@
-var SignUser, SignEmail, SignPass, SignConfirmPass;
+import {getFirestore, doc, setDoc, getDoc} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCAlGWOQoAYhk3yETmVLg1ro4Ez1BY3uv4",
+  authDomain: "aba-bayanihan.firebaseapp.com",
+  projectId: "aba-bayanihan",
+  storageBucket: "aba-bayanihan.firebasestorage.app",
+  messagingSenderId: "407997469518",
+  appId: "1:407997469518:web:80f346343748696535041f"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app)
+
 
 //notification system
 function showNotification(message, type = 'info') {
@@ -52,103 +68,106 @@ function validateEmail(email) {
     return emailPattern.test(email);
 }
 
-function SignIn() {
-    SignUser = document.getElementById("SignUser").value.trim();
-    SignEmail = document.getElementById("SignEmail").value.trim();
-    SignPass = document.getElementById("SignPass").value;
-    SignConfirmPass = document.getElementById("SignConfirmPass").value;
+async function SignIn() {
+  const SignUser = document.getElementById("SignUser").value.trim();
+  const SignEmail = document.getElementById("SignEmail").value.trim();
+  const SignPass = document.getElementById("SignPass").value;
+  const SignConfirmPass = document.getElementById("SignConfirmPass").value;
 
-    // Basic validation with notifications
-    if (!SignUser) {
-        showNotification("Please enter a username", "error");
-        return;
-    }
-    
-    if (SignUser.length < 3) {
-        showNotification("Username must be at least 3 characters long", "error");
-        return;
-    }
-    
-    if (!SignEmail) {
-        showNotification("Please enter an email address", "error");
-        return;
-    }
-    
-    if (!validateEmail(SignEmail)) {
-        showNotification("Please enter a valid email address", "error");
-        return;
-    }
-    
-    if (!SignPass) {
-        showNotification("Please enter a password", "error");
-        return;
-    }
-    
-    if (SignPass.length < 6) {
-        showNotification("Password must be at least 6 characters long", "error");
-        return;
-    }
-    
-    if (SignPass !== SignConfirmPass) {
-        showNotification("Passwords don't match!", "error");
-        document.getElementById("wrongPass").style.display = "block";
-        return;
+  // Basic validation
+  if (!SignUser) return showNotification("Please enter a username", "error");
+  if (SignUser.length < 3) return showNotification("Username must be at least 3 characters", "error");
+  if (!SignEmail) return showNotification("Please enter an email address", "error");
+  if (!validateEmail(SignEmail)) return showNotification("Please enter a valid email", "error");
+  if (!SignPass) return showNotification("Please enter a password", "error");
+  if (SignPass.length < 6) return showNotification("Password must be at least 6 characters", "error");
+  if (SignPass !== SignConfirmPass) {
+    showNotification("Passwords don't match!", "error");
+    document.getElementById("wrongPass").style.display = "block";
+    return;
+  }
+
+  try {
+  // Check if username already exists
+  const existingDoc = await getDoc(doc(db, "usernames", SignUser));
+  if (existingDoc.exists()) {
+    showNotification("Username already taken. Please choose another.", "error");
+    return;
+  }
+
+  // Create user in Firebase Auth
+  const userCredential = await createUserWithEmailAndPassword(auth, SignEmail, SignPass);
+  console.log("✅ User created:", userCredential.user.uid);
+
+  // Save email to Firestore under that username
+  await setDoc(doc(db, "usernames", SignUser), { email: SignEmail });
+  console.log("✅ Email stored in Firestore for:", SignUser);
+
+  // Final UI feedback and redirect
+  document.getElementById("wrongPass").style.display = "none";
+  showNotification("Account created successfully! Welcome to Bayanihan!", "success");
+
+  setTimeout(() => {
+    window.location.href = "index.html";
+  }, 1500);
+
+} catch (error) {
+  console.error("❌ Signup error:", error.code);
+
+  if (error.code === "auth/email-already-in-use") {
+    showNotification("This email is already registered. Please log in instead.", "error");
+  } else if (error.code === "auth/invalid-email") {
+    showNotification("That email is not valid. Please check your input.", "error");
+  } else if (error.code === "auth/weak-password") {
+    showNotification("Password is too weak. Please use at least 6 characters.", "error");
+  } else {
+    showNotification(error.message || "Signup failed. Please try again.", "error");
+  }
+}
+}
+window.SignIn = SignIn;
+async function LogIn() {
+  const loginInput = document.getElementById("LoginDet").value.trim();
+  const password = document.getElementById("PassDet").value;
+
+  const wrongPassMessage = document.getElementById("wrongPass");
+  wrongPassMessage.style.display = "none";
+
+  if (!loginInput || !password) {
+    showNotification("Please enter both username/email and password.", "error");
+    return;
+  }
+
+  let email = loginInput;
+
+  try {
+    const isEmail = loginInput.includes("@");
+
+    if (!isEmail) {
+      // Try to get email from Firestore using username
+      const docRef = doc(db, "usernames", loginInput);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        email = docSnap.data().email;
+      } else {
+        // fake dummy email to avoid leaking username validity
+        email = "fakeuser@example.com";
+      }
     }
 
-    const user = {
-        CuserName: SignUser,
-        email: SignEmail,
-        Cpassword: SignPass,
-    };
-
-    localStorage.setItem("user", JSON.stringify(user));
-
-    document.getElementById("wrongPass").style.display = "none";
-    showNotification("Account created successfully! Welcome to Bayanihan!", "success");
-    
-    // Delay redirect to show success message
-    setTimeout(() => {
-        window.location.href = "index.html";
-    }, 1500);
+    // Try to sign in (will fail for fake email or wrong password)
+    await signInWithEmailAndPassword(auth, email, password);
+    showNotification("Login successful!", "success");
+    // window.location.href = "dashboard.html";
+  } catch (error) {
+    // console.log("Login error code:", error.code);
+    showNotification("Invalid login credentials.", "error");
+    wrongPassMessage.style.display = "block";
+    // Don't log the error — it could expose hints
+    // console.error(error);
+  }
 }
 
-function LogIn() {
-    var username = document.getElementById("LoginDet").value.trim();
-    var password = document.getElementById("PassDet").value;
 
-    // Basic validation with notifications
-    if (!username) {
-        showNotification("Please enter your username or email", "error");
-        return;
-    }
-    
-    if (!password) {
-        showNotification("Please enter your password", "error");
-        return;
-    }
-
-    const userData = JSON.parse(localStorage.getItem("user"));
-
-    if (!userData) {
-        showNotification("No account found. Please sign up first!", "error");
-        return;
-    }
-
-    if (
-        userData &&
-        (userData.CuserName === username || userData.email === username) &&
-        userData.Cpassword === password
-    ) {
-        document.getElementById("wrongPass").style.display = "none";
-        showNotification("Welcome back! Logging you in...", "success");
-        
-        // Delay redirect to show success message
-        setTimeout(() => {
-            // Redirect to main application or dashboard
-            window.location.href = "dashboard.html"; // still on production
-        }, 1500);
-    } else {
-        document.getElementById("wrongPass").style.display = "block";
-        showNotification("Invalid username/email or password!", "error");
-    }
-}
+window.LogIn = LogIn;
